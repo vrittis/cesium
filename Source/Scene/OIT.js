@@ -2,6 +2,7 @@
 define([
         '../Core/defined',
         '../Core/destroyObject',
+        '../Core/Cartesian3',
         '../Core/Color',
         '../Renderer/createShaderSource',
         '../Renderer/BlendEquation',
@@ -10,11 +11,13 @@ define([
         '../Renderer/PixelDatatype',
         '../Renderer/PixelFormat',
         '../Renderer/RenderState',
+        './PlanePrimitive',
         '../Shaders/AdjustTranslucentFS',
         '../Shaders/CompositeOITFS'
     ], function(
         defined,
         destroyObject,
+        Cartesian3,
         Color,
         createShaderSource,
         BlendEquation,
@@ -23,6 +26,7 @@ define([
         PixelDatatype,
         PixelFormat,
         RenderState,
+        PlanePrimitive,
         AdjustTranslucentFS,
         CompositeOITFS) {
     "use strict";
@@ -462,6 +466,23 @@ define([
             executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
         }
 
+        passState.framebuffer = oit._adjustTranslucentFBO;
+        command = oit._planeCommand;
+
+        if (!defined(command.oit) || command.shaderProgram.id !== command.oit.shaderProgramId) {
+            command.oit = {
+                colorRenderState : getTranslucentColorRenderState(oit, context, command.renderState),
+                alphaRenderState : getTranslucentAlphaRenderState(oit, context, command.renderState),
+                colorShaderProgram : getTranslucentColorShaderProgram(oit, context, command.shaderProgram),
+                alphaShaderProgram : getTranslucentAlphaShaderProgram(oit, context, command.shaderProgram),
+                shaderProgramId : command.shaderProgram.id
+            };
+        }
+
+        renderState = command.oit.colorRenderState;
+        shaderProgram = command.oit.colorShaderProgram;
+        executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
+
         passState.framebuffer = oit._alphaFBO;
 
         for (j = 0; j < length; ++j) {
@@ -470,6 +491,12 @@ define([
             shaderProgram = command.oit.alphaShaderProgram;
             executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
         }
+
+        passState.framebuffer = oit._adjustAlphaFBO;
+        command = oit._planeCommand;
+        renderState = command.oit.alphaRenderState;
+        shaderProgram = command.oit.alphaShaderProgram;
+        executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
 
         passState.framebuffer = framebuffer;
     }
@@ -485,8 +512,12 @@ define([
         var debugFramebuffer = oit._opaqueFBO;
         passState.framebuffer = oit._translucentFBO;
 
+        var command;
+        var renderState;
+        var shaderProgram;
+
         for (var j = 0; j < length; ++j) {
-            var command = commands[j];
+            command = commands[j];
 
             if (!defined(command.oit) || command.shaderProgram.id !== command.oit.shaderProgramId) {
                 command.oit = {
@@ -496,15 +527,40 @@ define([
                 };
             }
 
-            var renderState = command.oit.translucentRenderState;
-            var shaderProgram = command.oit.translucentShaderProgram;
+            renderState = command.oit.translucentRenderState;
+            shaderProgram = command.oit.translucentShaderProgram;
             executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
         }
+
+        passState.framebuffer = oit._adjustTranslucentFBO;
+        command = oit._planeCommand;
+
+        if (!defined(command.oit) || command.shaderProgram.id !== command.oit.shaderProgramId) {
+            command.oit = {
+                translucentRenderState : getTranslucentMRTRenderState(oit, context, command.renderState),
+                translucentShaderProgram : getTranslucentMRTShaderProgram(oit, context, command.shaderProgram),
+                shaderProgramId : command.shaderProgram.id
+            };
+        }
+
+        renderState = command.oit.translucentRenderState;
+        shaderProgram = command.oit.translucentShaderProgram;
+        executeFunction(command, scene, context, passState, renderState, shaderProgram, debugFramebuffer);
 
         passState.framebuffer = framebuffer;
     }
 
     OIT.prototype.executeCommands = function(scene, executeFunction, passState, commands) {
+        if (!defined(this._planePrimitive)) {
+            this._planePrimitive = new PlanePrimitive({
+                point : Cartesian3.ZERO,
+                normal : Cartesian3.UNIT_Z,
+                depthTexture : this._depthTexture
+            });
+        }
+
+        this._planeCommand = this._planePrimitive.update(scene, this._depthTexture);
+
         if (this._translucentMRTSupport) {
             executeTranslucentCommandsSortedMRT(this, scene, executeFunction, passState, commands);
             return;

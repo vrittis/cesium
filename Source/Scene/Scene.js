@@ -913,16 +913,18 @@ define([
         Color.clone(clearColor, clear.color);
         clear.execute(context, passState);
 
-        var renderTranslucentCommands = false;
+        var renderTranslucentCommands = true; //false;
         var i;
         var frustumCommandsList = scene._frustumCommandsList;
         var numFrustums = frustumCommandsList.length;
+        /*
         for (i = 0; i < numFrustums; ++i) {
             if (frustumCommandsList[i].translucentIndex > 0) {
                 renderTranslucentCommands = true;
                 break;
             }
         }
+        */
 
         var useOIT = !picking && renderTranslucentCommands && scene._oit.isSupported();
         if (useOIT) {
