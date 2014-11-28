@@ -100,7 +100,7 @@ var afterAll;
         return true;
     };
 
-    jasmine.Suite.prototype.execute = (function(originalExecute) {
+    /*jasmine.Suite.prototype.execute = (function(originalExecute) {
         return function(onComplete) {
             if (!this.allSpecsFiltered()) {
                 var i;
@@ -139,7 +139,7 @@ var afterAll;
 
             originalExecute.call(this, onComplete);
         };
-    })(jasmine.Suite.prototype.execute);
+    })(jasmine.Suite.prototype.execute);*/
 
     function wrapWithDebugger(originalFunction) {
         return function() {
@@ -172,7 +172,7 @@ var afterAll;
         jasmine.getEnv().afterAll(afterAllFunction);
     };
 
-    var tests = [];
+    /*var tests = [];
     var readyToCreateTests = false;
     var createTests;
 
@@ -211,10 +211,10 @@ var afterAll;
 
         loadTests = false;
     } else {
-        require.config({
+    require.config({
             baseUrl : getQueryParameter('baseUrl') || '../Source',
             paths : {
-                'Specs' : '../Specs'
+                'Specs' : 'base/Specs'
             }
         });
 
@@ -243,7 +243,7 @@ var afterAll;
 
             createTests();
         }
-    }
+    }*/
 
     defineSuite = function(deps, name, suite, categories) {
         if (typeof suite === 'object' || typeof suite === 'string') {
@@ -259,25 +259,23 @@ var afterAll;
             name : name
         };
 
-        tests.push(test);
+        //tests.push(test);
 
         require(deps, function() {
             var args = arguments;
 
-            test.f = function() {
-                return describe(name, function() {
-                    suite.apply(null, args);
-                }, categories);
-            };
+            return describe(name, function() {
+                suite.apply(null, args);
+            }, categories);
 
-            createTestsIfReady();
+            //createTestsIfReady();
         });
     };
 
     xdefineSuite = function(deps, name, suite, categories) {
     };
 
-    function requireTests() {
+    /*function requireTests() {
         //specs is an array defined by SpecList.js
         var modules = ['Specs/addDefaultMatchers', 'Specs/equalsMethodEqualityTester'].concat(specs);
         require(modules, function(addDefaultMatchers, equalsMethodEqualityTester) {
@@ -300,5 +298,5 @@ var afterAll;
 
     if (loadTests) {
         requireTests();
-    }
+    }*/
 }());

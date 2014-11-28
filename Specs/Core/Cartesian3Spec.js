@@ -1,5 +1,5 @@
 /*global defineSuite*/
-defineSuite([
+define([
         'Core/Cartesian3',
         'Core/Cartographic',
         'Core/Ellipsoid',
