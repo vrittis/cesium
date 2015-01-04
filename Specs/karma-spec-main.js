@@ -111,7 +111,7 @@ require(['./ThirdParty/when'], function(when) {
             when(result, function() {
                 done();
             }, function() {
-                done.fail('promise rejected.');
+                done.fail('promise rejected: ' + e.toString());
             });
         });
     };
@@ -124,7 +124,7 @@ require(['./ThirdParty/when'], function(when) {
             when(result, function() {
                 done();
             }, function() {
-                done.fail('promise rejected.');
+                done.fail('promise rejected: ' + e.toString());
             });
         });
     };
@@ -137,7 +137,7 @@ require(['./ThirdParty/when'], function(when) {
             when(result, function() {
                 done();
             }, function() {
-                done.fail('promise rejected.');
+                done.fail('promise rejected: ' + e.toString());
             });
         });
     };
@@ -150,7 +150,7 @@ require(['./ThirdParty/when'], function(when) {
             when(result, function() {
                 done();
             }, function() {
-                done.fail('promise rejected.');
+                done.fail('promise rejected: ' + e.toString());
             });
         });
     };
