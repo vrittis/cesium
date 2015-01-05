@@ -18,12 +18,12 @@ module.exports = function(config) {
         'Specs/karma-spec-main.js',
         {pattern: 'Source/**/*.js', included: false},
         {pattern: 'Specs/**/*.js', included: false},
-        {pattern: 'Specs/Data/**', included: false},
-        {pattern: 'Source/Assets/**', included: false}
+        {pattern: 'Specs/Data/**', included: false, isBinary: true},
+        {pattern: 'Source/Assets/**', included: false, isBinary: true}
     ],
 
     proxies: {
-        '/Data': 'http://localhost:8080/Specs/Data'
+        '/Data': '/base/Specs/Data'
     },
 
     // list of files to exclude
@@ -67,6 +67,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
   });
 };
