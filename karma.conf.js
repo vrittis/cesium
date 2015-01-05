@@ -23,7 +23,7 @@ module.exports = function(config) {
     ],
 
     proxies: {
-        '/Data': '/base/Specs/Data'
+        '/Data': 'http://localhost:8080/Specs/Data'
     },
 
     // list of files to exclude
