@@ -14,5 +14,10 @@
         "compression": "1.0.8",
         "request": "2.36.0",
         "yargs": "1.2.6"
+    },
+    "browserify": {
+        "transform": [
+            "deamdify"
+        ]
     }
 }
