@@ -34,22 +34,26 @@ define([
     "use strict";
 
     /**
-     * Provides tiled imagery following a specific URL template
+     * Provides imagery by requesting tiles using a provided URL template.
      *
      * @alias UrlTemplateImageryProvider
      * @constructor
      *
      * @param {Object} [options] Object with the following properties:
-     * @param {String} [options.url='']  The pattern to request a tile which has the following keywords: <ul>
-     *  <li> {Z}:  corresponding to the level of a tile</li>
-     *  <li> {X}:  corresponding to the abscissa of a tile</li>
-     *  <li> {reverseX}:  corresponding to the reverse abscissa of a tile</li>
-     *  <li> {Y}:  corresponding to the ordinate of a tile</li>
-     *  <li> {reverseY}:  corresponding to the reverse ordinate of a tile</li>
-     *  <li> {north}:  the north bounding of a tile</li>
-     *  <li> {south}:  the south bounding of a tile</li>
-     *  <li> {east}:  the east bounding of a tile</li>
-     *  <li> {west}:  the west bounding of a tile</li>
+     * @param {String} options.url The pattern to request a tile which has the following keywords: <ul>
+     *  <li> {X}: The X coordinate of the tile in this provider's tiling scheme.</li>
+     *  <li> {Y}: The Y coordinate of the tile in this provider's tiling scheme.</li>
+     *  <li> {Z}: The level of the tile.</li>
+     *  <li> {reverseX}: The tile X coordinate measured from the East instead of from the West.</li>
+     *  <li> {reverseY}: The tile Y coordinate measured from the South instead of from the North.</li>
+     *  <li> {westRadians}: The Western extent of the tile, in radians.</li>
+     *  <li> {southRadians}: The Southern extent of the tile, in radians.</li>
+     *  <li> {eastRadians}: The Eastern extent of the tile, in radians.</li>
+     *  <li> {northRadians}: The Northern extent of the tile, in radians.</li>
+     *  <li> {westDegrees}: The Western extent of the tile, in degrees.</li>
+     *  <li> {southDegrees}: The Southern extent of the tile, in degrees.</li>
+     *  <li> {eastDegrees}: The Eastern extent of the tile, in degrees.</li>
+     *  <li> {northDegrees}: The Northern extent of the tile, in degrees.</li>
      * </ul>
      * @param {Object} [options.proxy] A proxy to use for requests. This object is expected to have a getURL function which returns the proxied URL.
      * @param {Credit|String} [options.credit=''] A credit for the data source, which is displayed on the canvas.
@@ -93,7 +97,7 @@ define([
      *    '&FORMAT=image/png&STYLES=default&TRANSPARENT=true&SRS=EPSG:4326&'+
      *    'BBOX={west},{south},{east},{north}&WIDTH=256&HEIGHT=256&TIME=2009-11-30T12:00',
      * });
-     * // An emulation of WMTS server 
+     * // An emulation of WMTS server
      * utip = new Cesium.UrlTemplateImageryProvider({
      *    url : 'URL/to/WMTS?REQUEST=gettile&LAYER=980_13&FORMAT=image/png&TILEMATRIXSET=EPSG:4258'+
      *    '&TILEMATRIX=EPSG:4258:{Z}&TILEROW={Y}&TILECOL={X}&DIM_TIME=2013-11-20T11:15:00Z&STYLE=default
