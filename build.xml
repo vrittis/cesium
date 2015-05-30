@@ -217,6 +217,10 @@
 		<element name="sourcefiles" type="fileset" />
 	</scriptdef>
 
+	<scriptdef name="amd2umd" language="javascript" src="${tasksDirectory}/amd2umd.js" manager="bsf" classpathref="javascriptClassPath" loaderref="javascript.loader">
+		<element name="sourcefiles" type="fileset" />
+	</scriptdef>
+
 	<target name="jsHint" depends="build" description="Runs JSHint on the entire source tree.">
 		<runJsHint jshintpath="${jsHintPath}" jshintoptionspath="${jsHintOptionsPath}" sandcastlejshintoptionspath="${sandcastleDirectory}/jsHintOptions.js" failureproperty="jsHint.failure">
 			<sourcefiles dir="${basedir}">
@@ -264,6 +268,19 @@
 				<exclude name="**/*.profile.js" />
 			</sourcefiles>
 		</sortRequires>
+	</target>
+
+	<target name="amd2umd" description="Sorts the list of requires in all source files">
+		<amd2umd>
+			<sourcefiles dir="${basedir}">
+				<include name="Source/**/*.js" />
+				<exclude name="Source/Shaders/**" />
+				<exclude name="Source/ThirdParty/**" />
+				<exclude name="Source/Workers/**" />
+				<exclude name="Source/copyrightHeader.js" />
+				<exclude name="**/*.profile.js" />
+			</sourcefiles>
+		</amd2umd>
 	</target>
 
 	<target name="cloc" depends="build" description="Runs cloc to count lines of code for Source and Specs directories.">

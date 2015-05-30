@@ -54,6 +54,7 @@ define([
         PolygonGraphics,
         PolylineGraphics) {
     "use strict";
+    /*global console*/
 
     function defaultCrsFunction(coordinates) {
         return Cartesian3.fromDegrees(coordinates[0], coordinates[1], coordinates[2]);
@@ -775,7 +776,7 @@ define([
         }).otherwise(function(error) {
             DataSource.setLoading(that, false);
             that._error.raiseEvent(that, error);
-            window.console.log(error);
+            console.log(error);
             return when.reject(error);
         });
     };
