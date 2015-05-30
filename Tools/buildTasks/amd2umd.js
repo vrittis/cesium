@@ -123,7 +123,7 @@ forEachFile('sourcefiles', function(relativePath, file) {
     var heading =
     '/*global define:true,exports,factory,module,require*/\n'+
     "if (typeof exports === 'object' && typeof define !== 'function') {\n"+
-    '    define = function(factory) {\n'+
+    '    var define = function(factory) {\n'+
     '        "use strict";\n'+
     '        factory(require, exports, module);\n'+
     '    };\n'+

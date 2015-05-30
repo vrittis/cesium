@@ -1,4 +1,4 @@
-/*global define,console*/
+/*global define*/
 define([
         './defined',
         './DeveloperError'
@@ -6,6 +6,7 @@ define([
         defined,
         DeveloperError) {
     "use strict";
+    /*global console*/
 
     var warnings = {};
 

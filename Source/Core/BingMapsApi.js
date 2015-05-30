@@ -1,9 +1,10 @@
-/*global define,console*/
+/*global define*/
 define([
         './defined'
     ], function(
         defined) {
     "use strict";
+    /*global console*/
 
     var BingMapsApi = {
     };

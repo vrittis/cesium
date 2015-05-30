@@ -1,4 +1,4 @@
-/*global define,console*/
+/*global define*/
 define([
         '../../Core/buildModuleUrl',
         '../../Core/Cartesian3',
@@ -46,6 +46,7 @@ define([
         Sun,
         getElement) {
     "use strict";
+    /*global console*/
 
     function getDefaultSkyBoxUrl(suffix) {
         return buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_' + suffix + '.jpg');
