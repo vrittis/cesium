@@ -115,7 +115,7 @@ define([
      * @param {GetFeatureInfoFormat[]} [options.getFeatureInfoFormats] The formats in which to get feature information at a
      *                                 specific location when {@see UrlTemplateImageryProvider#pickFeatures} is invoked.  If this
      *                                 parameter is not specified, feature picking is disabled.
-     * @param {Boolean} [options.deferReadiness=false] True to defer full construction of this instance until a later call to {@see UrlTemplateImageryProvider#initialize}.
+     * @param {Boolean} [options.deferReadiness=false] True to defer full construction of this instance until a later call to {@see UrlTemplateImageryProvider#reinitialize}.
      *                                                 Until that method is called, {@see UrlTemplateImageryProvider#ready} will be false.  When this property is true,
      *                                                 even `options.url` is optional.  This mechanism is useful when implementing other imagery providers in terms
      *                                                 of this one.
