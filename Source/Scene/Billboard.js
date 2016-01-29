@@ -149,6 +149,7 @@ define([
 
         this._actualClampedPosition = undefined;
         this._removeCallbackFunc = undefined;
+        this._clampingFunctionCounter = 0;
         this._mode = SceneMode.SCENE3D;
 
         this._updateClamping();
@@ -843,6 +844,24 @@ define([
     var scratchCartographic = new Cartographic();
     var scratchPosition = new Cartesian3();
 
+    function getUpdateFunction(owner, position, ellipsoid, count) {
+        return function updateFunction(clampedPosition) {
+            if (count !== owner._clampingFunctionCounter) {
+                return;
+            }
+            if (owner._heightReference === HeightReference.RELATIVE_TO_GROUND) {
+                if (owner._mode === SceneMode.SCENE3D) {
+                    var clampedCart = ellipsoid.cartesianToCartographic(clampedPosition, scratchCartographic);
+                    clampedCart.height += position.height;
+                    ellipsoid.cartographicToCartesian(clampedCart, clampedPosition);
+                } else {
+                    clampedPosition.x += position.height;
+                }
+            }
+            owner._clampedPosition = Cartesian3.clone(clampedPosition, owner._clampedPosition);
+        };
+    }
+
     Billboard._updateClamping = function(collection, owner) {
         var scene = collection._scene;
         if (!defined(scene)) {
@@ -881,19 +900,8 @@ define([
             owner._removeCallbackFunc();
         }
 
-        function updateFunction(clampedPosition) {
-            if (owner._heightReference === HeightReference.RELATIVE_TO_GROUND) {
-                if (owner._mode === SceneMode.SCENE3D) {
-                    var clampedCart = ellipsoid.cartesianToCartographic(clampedPosition, scratchCartographic);
-                    clampedCart.height += position.height;
-                    ellipsoid.cartographicToCartesian(clampedCart, clampedPosition);
-                } else {
-                    clampedPosition.x += position.height;
-                }
-            }
-            owner._clampedPosition = Cartesian3.clone(clampedPosition, owner._clampedPosition);
-        }
-        owner._removeCallbackFunc = surface.updateHeight(position, updateFunction);
+        owner._clampingFunctionCounter++;
+        owner._removeCallbackFunc = surface.updateHeight(position, getUpdateFunction(owner, position, ellipsoid, owner._clampingFunctionCounter), owner);
 
         var height = globe.getHeight(position);
         if (defined(height)) {
@@ -906,7 +914,7 @@ define([
                 Cartesian3.fromElements(scratchPosition.z, scratchPosition.x, scratchPosition.y, scratchPosition);
             }
 
-            updateFunction(scratchPosition);
+            getUpdateFunction(owner, position, ellipsoid, owner._clampingFunctionCounter)(scratchPosition);
         }
     };
 
@@ -1134,7 +1142,7 @@ define([
      *
      * @example
      * console.log(b.computeScreenSpacePosition(scene).toString());
-     * 
+     *
      * @see Billboard#eyeOffset
      * @see Billboard#pixelOffset
      */
